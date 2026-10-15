@@ -4,39 +4,32 @@
  */
 package Service;
 import java.util.ArrayList;
+import Model.TransaksiDAO;
 import Model.Transaksi;
 /**
  *
  * @author LOQ
  */
 public class TransaksiService {
-    private ArrayList<Transaksi> daftarTransaksi;
+    private TransaksiDAO dao;
  
     public TransaksiService() {
-        daftarTransaksi = new ArrayList<>();
+        dao = new TransaksiDAO();
     }
  
-    public void tambah(Transaksi transaksi) {
-        daftarTransaksi.add(transaksi);
+    public boolean tambah(Transaksi transaksi) {
+        return dao.tambah(transaksi);
     }
  
-    public void tambah(String namaPelanggan, int nomorKomputer, int durasiJam, double totalBayar) {
-        int idTransaksi = jumlahTransaksi() + 1;
-        tambah(new Transaksi(idTransaksi, namaPelanggan, nomorKomputer, durasiJam, totalBayar));
+    public boolean tambah(String namaPelanggan, int nomorKomputer, int durasiJam, double totalBayar) {
+        return tambah(new Transaksi(0, namaPelanggan, nomorKomputer, durasiJam, totalBayar));
     }
  
-    public int jumlahTransaksi() {
-        return daftarTransaksi.size();
+    public ArrayList<Transaksi> ambilSemua() {
+        return dao.ambilSemua();
     }
  
-    public void tampilkanSemua() {
-        if (daftarTransaksi.isEmpty()) {
-            System.out.println("Belum ada transaksi.");
-            return;
-        }
-        for (int i = 0; i < daftarTransaksi.size(); i++) {
-            System.out.println("--------------------");
-            daftarTransaksi.get(i).tampilkanInfo();
-        }
+    public int idTerakhir() {
+        return dao.ambilIdTerakhir();
     }
 }

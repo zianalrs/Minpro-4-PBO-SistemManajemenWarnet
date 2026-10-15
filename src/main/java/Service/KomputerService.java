@@ -4,6 +4,8 @@
  */
 package Service;
 import java.util.ArrayList;
+import Model.KomputerDAO;
+import Model.TransaksiDAO;
 import Model.Komputer;
 import Model.KomputerReguler;
 import Model.KomputerVIP;
@@ -13,94 +15,76 @@ import Model.KomputerVIP;
  */
 
 public class KomputerService {
-    private ArrayList<Komputer> daftarKomputer;
+    private KomputerDAO komputerDao;
+    private TransaksiDAO transaksiDao;
  
     public KomputerService() {
-        daftarKomputer = new ArrayList<>();
- 
-        KomputerReguler pc1 = new KomputerReguler(1, "Ryzen 5 5600, RTX 3050 Ti, RAM 16GB");
-        pc1.setDipakai(true);
-        daftarKomputer.add(pc1);
- 
-        KomputerVIP pc2 = new KomputerVIP(2, "Intel i7-13700F, RTX 4070, RAM 32GB");
-        daftarKomputer.add(pc2);
+        komputerDao = new KomputerDAO();
+        transaksiDao = new TransaksiDAO();
     }
  
     public boolean adaData() {
-        return !daftarKomputer.isEmpty();
+        return komputerDao.hitung() > 0;
     }
  
-    public void tambah(Komputer komputer) {
-        daftarKomputer.add(komputer);
+    public boolean tambah(Komputer komputer) {
+        return komputerDao.tambah(komputer);
     }
  
-    public void tambah(int nomor, String spesifikasi, String kategori) {
+    public boolean tambah(int nomor, String spesifikasi, String kategori) {
         if (kategori.equalsIgnoreCase("VIP")) {
-            tambah(new KomputerVIP(nomor, spesifikasi));
+            return tambah(new KomputerVIP(nomor, spesifikasi));
         } else {
-            tambah(new KomputerReguler(nomor, spesifikasi));
+            return tambah(new KomputerReguler(nomor, spesifikasi));
         }
     }
  
-    public void tampilkanSemua() {
-        if (daftarKomputer.isEmpty()) {
-            System.out.println("Belum ada data komputer.");
-            return;
-        }
-        for (int i = 0; i < daftarKomputer.size(); i++) {
-            System.out.println("--------------------");
-            daftarKomputer.get(i).tampilkanInfo();
-        }
+    public ArrayList<Komputer> ambilSemua() {
+        return komputerDao.ambilSemua();
     }
  
     public Komputer cariByNomor(int nomor) {
-        for (int i = 0; i < daftarKomputer.size(); i++) {
-            if (daftarKomputer.get(i).getNomor() == nomor) {
-                return daftarKomputer.get(i);
-            }
-        }
-        return null;
+        return komputerDao.ambilByNomor(nomor);
     }
  
     public boolean ubah(int nomor, String spesifikasiBaru) {
-        Komputer k = cariByNomor(nomor);
-        if (k == null) {
-            return false;
-        }
-        k.setSpesifikasi(spesifikasiBaru);
-        return true;
+        return komputerDao.ubahSpesifikasi(nomor, spesifikasiBaru);
     }
  
-    public boolean hapus(int nomor) {
-        Komputer k = cariByNomor(nomor);
-        if (k == null) {
-            return false;
+    public String hapus(int nomor) {
+        if (komputerDao.ambilByNomor(nomor) == null) {
+            return "tidak_ditemukan";
         }
-        daftarKomputer.remove(k);
-        return true;
+        if (transaksiDao.adaTransaksiUntuk(nomor)) {
+            return "punya_transaksi";
+        }
+        return komputerDao.hapus(nomor) ? "berhasil" : "gagal";
     }
  
-    public String booking(int nomor) {
-        Komputer k = cariByNomor(nomor);
+    public String cekKetersediaan(int nomor) {
+        Komputer k = komputerDao.ambilByNomor(nomor);
         if (k == null) {
             return "tidak_ditemukan";
         }
         if (k.isDipakai()) {
             return "sudah_dipakai";
         }
-        k.setDipakai(true);
-        return "berhasil";
+        return "tersedia";
+    }
+ 
+    public boolean booking(int nomor) {
+        return komputerDao.ubahStatus(nomor, true);
     }
  
     public String kosongkan(int nomor) {
-        Komputer k = cariByNomor(nomor);
+        Komputer k = komputerDao.ambilByNomor(nomor);
         if (k == null) {
             return "tidak_ditemukan";
         }
         if (!k.isDipakai()) {
             return "belum_dipakai";
         }
-        k.setDipakai(false);
+        komputerDao.ubahStatus(nomor, false);
         return "berhasil";
     }
 }

@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package View;
+import java.util.ArrayList;
+import Model.Komputer;
+import Model.Transaksi;
 
 /**
  *
@@ -38,6 +41,28 @@ public class View {
         System.out.println("Kategori Komputer:");
         System.out.println("1. Reguler (Rp7000/jam)");
         System.out.println("2. VIP (Rp14000/jam)");
+    }
+ 
+    public void tampilkanDaftarKomputer(ArrayList<Komputer> daftar) {
+        if (daftar.isEmpty()) {
+            System.out.println("Belum ada data komputer.");
+            return;
+        }
+        for (int i = 0; i < daftar.size(); i++) {
+            System.out.println("--------------------");
+            daftar.get(i).tampilkanInfo();
+        }
+    }
+ 
+    public void tampilkanDaftarTransaksi(ArrayList<Transaksi> daftar) {
+        if (daftar.isEmpty()) {
+            System.out.println("Belum ada transaksi.");
+            return;
+        }
+        for (int i = 0; i < daftar.size(); i++) {
+            System.out.println("--------------------");
+            daftar.get(i).tampilkanInfo();
+        }
     }
  
     public void tampilkanInfoBooking(int idTransaksi, double totalBayar) {

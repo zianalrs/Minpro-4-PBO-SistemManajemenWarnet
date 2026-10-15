@@ -16,9 +16,6 @@ public class Transaksi {
     private final double totalBayar;
  
     public Transaksi(int idTransaksi, String namaPelanggan, int nomorKomputer, int durasiJam, double totalBayar) {
-        if (idTransaksi <= 0) {
-            System.out.println("ID transaksi harus lebih dari 0.");
-        }
         if (namaPelanggan == null || namaPelanggan.trim().isEmpty()) {
             System.out.println("Nama pelanggan tidak boleh kosong.");
         }

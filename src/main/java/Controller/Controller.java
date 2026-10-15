@@ -4,6 +4,7 @@
  */
 package Controller;
 import java.util.Scanner;
+import Config.Koneksi;
 import Model.Komputer;
 import Service.KomputerService;
 import Service.TransaksiService;
@@ -29,6 +30,11 @@ public class Controller {
     }
  
     public void jalankan() {
+        if (Koneksi.getConnection() == null) {
+            view.tampilkanPesan("Program dihentikan karena tidak dapat terhubung ke database.");
+            return;
+        }
+ 
         boolean lanjut = true;
  
         while (lanjut) {
@@ -37,7 +43,7 @@ public class Controller {
  
             switch (pilihan) {
                 case 1:
-                    komputerService.tampilkanSemua();
+                    view.tampilkanDaftarKomputer(komputerService.ambilSemua());
                     break;
  
                 case 2:
@@ -45,7 +51,7 @@ public class Controller {
                     break;
  
                 case 3:
-                    transaksiService.tampilkanSemua();
+                    view.tampilkanDaftarTransaksi(transaksiService.ambilSemua());
                     break;
  
                 case 4:
@@ -70,18 +76,23 @@ public class Controller {
         }
  
         int nomorBooking = validasi.bacaIntPositif(input, "Masukkan nomor komputer yang ingin dibooking: ");
-        String hasilBooking = komputerService.booking(nomorBooking);
+        String status = komputerService.cekKetersediaan(nomorBooking);
  
-        if (hasilBooking.equals("berhasil")) {
+        if (status.equals("tersedia")) {
             Komputer k = komputerService.cariByNomor(nomorBooking);
             String namaPelanggan = validasi.bacaTeks(input, "Nama Pelanggan : ");
             int durasiJam = validasi.bacaIntPositif(input, "Durasi (jam)   : ");
             double totalBayar = durasiJam * k.getHargaPerJam();
  
+            if (!komputerService.booking(nomorBooking)) {
+                view.tampilkanPesan("Booking gagal diproses.");
+                return;
+            }
+ 
             transaksiService.tambah(namaPelanggan, k.getNomor(), durasiJam, totalBayar);
-            view.tampilkanInfoBooking(transaksiService.jumlahTransaksi(), totalBayar);
-        } else if (hasilBooking.equals("sudah_dipakai")) {
-            view.tampilkanPesan("Komputer sedang digunakan orang lain.");
+            view.tampilkanInfoBooking(transaksiService.idTerakhir(), totalBayar);
+        } else if (status.equals("sudah_dipakai")) {
+            view.tampilkanPesan("Komputer sedang dipakai orang lain.");
         } else {
             view.tampilkanPesan("Komputer dengan nomor tersebut tidak ditemukan.");
         }
@@ -130,8 +141,8 @@ public class Controller {
         int kategori = validasi.bacaInt(input, "Pilih kategori : ");
         String namaKategori = (kategori == 2) ? "VIP" : "Reguler";
  
-        komputerService.tambah(nomor, spesifikasi, namaKategori);
-        view.tampilkanPesan("Komputer berhasil ditambahkan.");
+        boolean berhasil = komputerService.tambah(nomor, spesifikasi, namaKategori);
+        view.tampilkanPesan(berhasil ? "Komputer berhasil ditambahkan." : "Komputer gagal ditambahkan.");
     }
  
     private void ubahKomputer() {
@@ -155,8 +166,16 @@ public class Controller {
  
         int nomorHapus = validasi.bacaIntPositif(input, "Masukkan nomor komputer yang ingin dihapus: ");
  
-        boolean berhasil = komputerService.hapus(nomorHapus);
-        view.tampilkanPesan(berhasil ? "Data berhasil dihapus." : "Komputer dengan nomor tersebut tidak ditemukan.");
+        String hasil = komputerService.hapus(nomorHapus);
+        if (hasil.equals("berhasil")) {
+            view.tampilkanPesan("Data berhasil dihapus.");
+        } else if (hasil.equals("punya_transaksi")) {
+            view.tampilkanPesan("Komputer tidak bisa dihapus karena sudah memiliki riwayat transaksi.");
+        } else if (hasil.equals("tidak_ditemukan")) {
+            view.tampilkanPesan("Komputer dengan nomor tersebut tidak ditemukan.");
+        } else {
+            view.tampilkanPesan("Komputer gagal dihapus.");
+        }
     }
  
     private void kosongkanKomputer() {

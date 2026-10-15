@@ -9,8 +9,8 @@ package Model;
  * @author LOQ
  */
 public class KomputerVIP extends Komputer {
-    private static final double HARGA_PER_JAM = 14000;
-    private static final String FASILITAS_TAMBAHAN = "AC + Snack Gratis + Kursi Gaming";
+    private final double HARGA_PER_JAM = 14000;
+    private final String FASILITAS_TAMBAHAN = "AC + Snack Gratis + Kursi Gaming";
  
     public KomputerVIP(int nomor, String spesifikasi) {
         super(nomor, spesifikasi);

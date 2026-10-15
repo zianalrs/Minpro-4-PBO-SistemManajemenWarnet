@@ -9,7 +9,7 @@ package Model;
  * @author LOQ
  */
 public class KomputerReguler extends Komputer {
-    private static final double HARGA_PER_JAM = 7000;
+    private final double HARGA_PER_JAM = 7000;
  
     public KomputerReguler(int nomor, String spesifikasi) {
         super(nomor, spesifikasi);
