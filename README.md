@@ -309,18 +309,18 @@ Database `db_warnet` memiliki dua tabel, yaitu `komputer` dan `transaksi`. Kolom
 
 ```sql
 CREATE TABLE komputer (
-    nomor       INT PRIMARY KEY,
+    nomor INT PRIMARY KEY,
     spesifikasi VARCHAR(255) NOT NULL,
-    kategori    ENUM('Reguler', 'VIP') NOT NULL,
-    dipakai     BOOLEAN NOT NULL DEFAULT FALSE
+    kategori ENUM('Reguler', 'VIP') NOT NULL,
+    dipakai BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE transaksi (
-    id_transaksi   INT AUTO_INCREMENT PRIMARY KEY,
+    id_transaksi INT AUTO_INCREMENT PRIMARY KEY,
     nama_pelanggan VARCHAR(100) NOT NULL,
     nomor_komputer INT NOT NULL,
-    durasi_jam     INT NOT NULL,
-    total_bayar    DECIMAL(12,2) NOT NULL,
+    durasi_jam INT NOT NULL,
+    total_bayar DECIMAL(12,2) NOT NULL,
     FOREIGN KEY (nomor_komputer) REFERENCES komputer(nomor)
 );
 ```
@@ -332,11 +332,13 @@ CREATE TABLE transaksi (
 Driver JDBC dipasang lewat `pom.xml` dengan dependency `mysql-connector-j`.
 
 ```xml
-<dependency>
-    <groupId>com.mysql</groupId>
-    <artifactId>mysql-connector-j</artifactId>
-    <version>8.3.0</version>
-</dependency>
+    <dependencies>
+    <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <version>8.3.0</version>
+    </dependency>
+</dependencies>
 ```
 
 Koneksi dibuat oleh class `Koneksi` di package `Config`. Class ini menyimpan URL, username, dan password database, lalu method `getConnection()` membuat koneksi baru hanya jika koneksi belum ada atau sudah terputus. Jika koneksi gagal, `SQLException` ditangkap dan pesan kesalahannya ditampilkan.
