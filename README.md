@@ -401,28 +401,3 @@ DAO digunakan untuk memisahkan logic program dari logic akses database. Semua pe
 | `TransaksiDAO` | `ambilSemua()` | `SELECT` seluruh transaksi |
 | `TransaksiDAO` | `ambilIdTerakhir()` | `SELECT MAX(id_transaksi)` |
 | `TransaksiDAO` | `adaTransaksiUntuk()` | `SELECT COUNT(*) ... WHERE nomor_komputer = ?` |
-
-### 5. Data Awal (Dummy Data)
-
-Data awal tidak diisi lewat kode Java, tetapi lewat file `database/db_warnet.sql`. File ini membuat database dan tabel, lalu mengisi dua data komputer dan satu data transaksi.
-
-```sql
-INSERT INTO komputer (nomor, spesifikasi, kategori, dipakai) VALUES
-(1, 'Ryzen 5 5600, RTX 3050 Ti, RAM 16GB', 'Reguler', TRUE),
-(2, 'Intel i7-13700F, RTX 4070, RAM 32GB', 'VIP', FALSE);
-
-INSERT INTO transaksi (nama_pelanggan, nomor_komputer, durasi_jam, total_bayar) VALUES
-('Budi', 1, 2, 14000);
-```
-
-Dengan begitu, menu Lihat Komputer dan Riwayat Transaksi langsung menampilkan data tanpa perlu input dari awal. Setiap kali file SQL di-import, tabel dihapus dan dibuat ulang sehingga data kembali ke kondisi awal.
-
-[ss data awal di database]
-
-### 6. Cara Menjalankan Program
-
-1. Jalankan MySQL melalui Laragon (klik Start All).
-2. Import file `database/db_warnet.sql` menggunakan HeidiSQL atau phpMyAdmin agar database dan data awal terbentuk.
-3. Pastikan dependency `mysql-connector-j` sudah ada di `pom.xml`.
-4. Sesuaikan `USER` dan `PASS` pada class `Koneksi` jika berbeda dengan pengaturan MySQL.
-5. Jalankan class `Warnet` untuk memulai program.
