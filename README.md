@@ -31,7 +31,7 @@ Data program disimpan secara permanen di database `db_warnet`, sehingga tetap ad
 
 Program dibagi menjadi tujuh package berdasarkan fungsi masing-masing, dengan mengacu pada struktur MVC (Model, View, Controller) yang dilengkapi lapisan `Service` untuk aturan program dan class DAO untuk akses database. Alur pemanggilannya adalah `Controller` → `Service` → `DAO` → database, sedangkan hasilnya ditampilkan oleh `View`.
 
-[ss struktur package]
+<img width="315" height="492" alt="image" src="https://github.com/user-attachments/assets/72db533b-aa72-4f60-b30f-fa14ae89ce8b" />
 
 ### 1. Package Model
 
@@ -83,7 +83,7 @@ Selain package di atas, file `db_warnet.sql` disimpan di folder `database` pada 
 
 Program dimulai dengan menjalankan class `Warnet`, yang membuat objek `Controller` lalu memanggil method `jalankan()`. Di awal, `Controller` mengecek koneksi ke database; jika koneksi gagal, program menampilkan pesan dan berhenti. Jika berhasil, sistem menampilkan menu utama yang berisi pilihan untuk melihat komputer, melakukan booking, melihat riwayat transaksi, mengelola komputer, dan keluar dari program.
 
-[ss menu utama]
+<img width="260" height="209" alt="image" src="https://github.com/user-attachments/assets/e85dc446-d9ad-4992-9e45-48f9d9980c32" />
 
 User memilih menu dengan memasukkan angka sesuai pilihan. Program menggunakan perulangan `while` sehingga menu utama akan terus ditampilkan sampai user memilih menu keluar, dan setiap pilihan diproses menggunakan `switch-case`. Seluruh input dibaca lewat class `Validasi`, sehingga jika user memasukkan huruf pada input angka, program tidak berhenti dan meminta user mengulang input.
 
@@ -93,7 +93,7 @@ User memilih menu dengan memasukkan angka sesuai pilihan. Program menggunakan pe
 
 Menu **Lihat Komputer** menampilkan seluruh data komputer yang tersimpan di database. `Controller` meminta data ke `KomputerService`, yang mengambilnya lewat `KomputerDAO` dengan query `SELECT`. Hasilnya berupa `ArrayList<Komputer>` yang kemudian ditampilkan oleh `View` menggunakan perulangan `for`. Informasi yang ditampilkan meliputi nomor, kategori, spesifikasi, harga per jam, dan status; untuk komputer VIP ditampilkan juga fasilitas tambahannya. Karena data awal sudah ada di database, menu ini langsung menampilkan data tanpa perlu input terlebih dahulu.
 
-[ss lihat komputer]
+<img width="486" height="279" alt="image" src="https://github.com/user-attachments/assets/b0998041-77e0-4ed0-95d8-12c91068b8d7" />
 
 ---
 
@@ -110,9 +110,9 @@ Menu **Booking Komputer** digunakan untuk melakukan penyewaan komputer oleh pela
 Total Bayar = Durasi × Harga per Jam
 ```
 
-- Setelah seluruh data valid, status komputer di database diubah menjadi sedang dipakai dan transaksi disimpan ke tabel `transaksi`. ID transaksi dibuat otomatis oleh database.
+<img width="437" height="123" alt="image" src="https://github.com/user-attachments/assets/1d54d941-b3c0-4288-87a6-35dc61a20a5e" />
 
-[ss booking komputer]
+- Setelah seluruh data valid, status komputer di database diubah menjadi sedang dipakai dan transaksi disimpan ke tabel `transaksi`. ID transaksi dibuat otomatis oleh database.
 
 ---
 
@@ -120,7 +120,7 @@ Total Bayar = Durasi × Harga per Jam
 
 Menu **Riwayat Transaksi** menampilkan seluruh transaksi booking yang tersimpan di tabel `transaksi`, meliputi ID transaksi, nama pelanggan, nomor komputer, durasi penggunaan, dan total pembayaran. Jika belum ada transaksi, program menampilkan pesan bahwa belum ada transaksi.
 
-[ss riwayat transaksi]
+<img width="250" height="257" alt="image" src="https://github.com/user-attachments/assets/0cf1311d-1986-4b84-853f-ecc485109646" />
 
 ---
 
@@ -128,31 +128,31 @@ Menu **Riwayat Transaksi** menampilkan seluruh transaksi booking yang tersimpan 
 
 Menu **Kelola Komputer** membuka submenu dengan perulangannya sendiri, berisi lima pilihan: Tambah Komputer, Ubah Data Komputer, Hapus Komputer, Kosongkan Komputer, dan Kembali ke menu utama. Pilihan Ubah, Hapus, dan Kosongkan ditolak dengan pesan yang jelas jika data komputer masih kosong.
 
-[ss menu kelola komputer]
+<img width="260" height="208" alt="image" src="https://github.com/user-attachments/assets/85f15ff6-3dd5-42b3-a02a-a4bc80167f76" />
 
 #### 4.1 Tambah Komputer
 
 User memasukkan nomor komputer, spesifikasi, dan memilih kategori Reguler atau VIP. Harga per jam tidak diinput manual karena sudah ditentukan oleh kategori. Jika nomor komputer sudah digunakan, komputer baru tidak dapat ditambahkan dengan nomor yang sama. Data yang valid disimpan ke tabel `komputer`.
 
-[ss tambah komputer]
+<img width="477" height="144" alt="image" src="https://github.com/user-attachments/assets/db7cfd82-7d1c-4ea5-a2de-fb03ac228f45" />
 
 #### 4.2 Ubah Data Komputer
 
 User memasukkan nomor komputer yang ingin diubah, lalu memasukkan spesifikasi baru. Jika nomor ditemukan, spesifikasi diperbarui di database; jika tidak, program menampilkan pesan bahwa komputer tidak ditemukan.
 
-[ss ubah komputer]
+<img width="516" height="61" alt="image" src="https://github.com/user-attachments/assets/62faf109-42e5-4e04-93f5-32c64bf05116" />
 
 #### 4.3 Hapus Komputer
 
 User memasukkan nomor komputer yang ingin dihapus. Jika komputer ditemukan dan belum memiliki riwayat transaksi, datanya dihapus dari database. Komputer yang sudah memiliki riwayat transaksi tidak dapat dihapus, dan program menampilkan pesan yang menjelaskan alasannya, supaya data transaksi tidak kehilangan komputer yang terkait.
 
-[ss hapus komputer]
+<img width="415" height="42" alt="image" src="https://github.com/user-attachments/assets/1093385c-c942-422b-9b33-118c4552f4d3" />
 
 #### 4.4 Kosongkan Komputer
 
 User memasukkan nomor komputer yang ingin dikosongkan. Jika komputer sedang dipakai, statusnya di database diubah kembali menjadi kosong sehingga bisa dibooking lagi. Jika komputer memang sudah kosong, program memberi tahu hal tersebut.
 
-[ss kosongkan komputer]
+<img width="457" height="41" alt="image" src="https://github.com/user-attachments/assets/ad3ca33a-8cff-4bf3-9565-c623569c1dc1" />
 
 ---
 
@@ -160,7 +160,7 @@ User memasukkan nomor komputer yang ingin dikosongkan. Jika komputer sedang dipa
 
 Menu **Keluar** menghentikan perulangan `while` pada menu utama sehingga program selesai dijalankan.
 
-[ss keluar program]
+<img width="412" height="41" alt="image" src="https://github.com/user-attachments/assets/748819e0-d2dd-40c6-81e1-dd52d46deed2" />
 
 ---
 
